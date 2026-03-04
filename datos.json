@@ -87,8 +87,7 @@
         "retiro": [],
         "todas_las_tablas": [],
         "texto_relevante": [],
-        "tiene_datos": false,
-        "error": "No se pudo obtener la página"
+        "tiene_datos": false
       }
     }
   }
