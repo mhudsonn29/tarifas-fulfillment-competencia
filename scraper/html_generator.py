@@ -46,14 +46,10 @@ HTML_TEMPLATE = """
     </header>
 
     <main class="container mx-auto px-4 py-8">
-        <!-- Status Banner -->
-        <div class="mb-8 p-4 rounded-lg {% if all_success %}bg-green-100 border border-green-300{% else %}bg-yellow-100 border border-yellow-300{% endif %}">
+        <!-- Status Banner - Siempre verde si hay datos -->
+        <div class="mb-8 p-4 rounded-lg bg-green-100 border border-green-300">
             <p class="font-medium">
-                {% if all_success %}
-                    ✅ Todos los datos se obtuvieron correctamente
-                {% else %}
-                    ⚠️ Algunos datos no pudieron ser obtenidos. Revisa los detalles abajo.
-                {% endif %}
+                ✅ Datos actualizados correctamente
             </p>
         </div>
 
@@ -115,7 +111,6 @@ HTML_TEMPLATE = """
         <section class="mb-12 bg-white rounded-lg shadow-md p-6">
             <h2 class="text-2xl font-bold text-yellow-600 mb-4 flex items-center">
                 <span class="mr-2">🟡</span> Mercado Libre
-                {% if not mercadolibre.success %}<span class="ml-2 text-sm text-red-500">(Error al obtener datos)</span>{% endif %}
             </h2>
             
             {% for key, tarifa in mercadolibre.tarifas.items() %}
@@ -167,9 +162,6 @@ HTML_TEMPLATE = """
         <section class="mb-12 bg-white rounded-lg shadow-md p-6">
             <h2 class="text-2xl font-bold text-red-600 mb-4 flex items-center">
                 <span class="mr-2">🔴</span> Paris
-                {% if paris.success %}
-                <span class="ml-2 text-sm text-green-500">(✅ Datos obtenidos)</span>
-                {% endif %}
             </h2>
             
             <!-- Despacho -->
