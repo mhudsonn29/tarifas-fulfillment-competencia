@@ -77,8 +77,7 @@
         "tabla_menor_49990": [],
         "tabla_mayor_49990": [],
         "todas_las_tablas": [],
-        "tiene_datos": false,
-        "error": "No se pudo obtener la página"
+        "tiene_datos": false
       },
       "fulfillment": {
         "titulo": "Fulfillment by Paris (Almacenamiento y Retiro)",
@@ -87,7 +86,8 @@
         "retiro": [],
         "todas_las_tablas": [],
         "texto_relevante": [],
-        "tiene_datos": false
+        "tiene_datos": false,
+        "error": "No se pudo obtener la página"
       }
     }
   }
