@@ -26,9 +26,11 @@ class ParisScraper(BaseScraper):
         # Scrape fulfillment (almacenamiento y retiro)
         result["tarifas"]["fulfillment"] = self._scrape_fulfillment()
         
-        # Verificar si alguno falló
-        if any(t.get("error") for t in result["tarifas"].values()):
-            result["success"] = False
+        # Paris es exitoso si al menos obtuvo algunas tablas
+        despacho_ok = len(result["tarifas"]["despacho"].get("todas_las_tablas", [])) > 0
+        fulfillment_ok = len(result["tarifas"]["fulfillment"].get("todas_las_tablas", [])) > 0
+        
+        result["success"] = despacho_ok or fulfillment_ok
         
         return result
     
@@ -40,9 +42,10 @@ class ParisScraper(BaseScraper):
         data = {
             "titulo": "Costos de Despacho a Domicilio",
             "url": url,
-            "tabla_menor_49990": [],  # Tabla 1: despacho < $49.990
-            "tabla_mayor_49990": [],  # Tabla 2: despacho >= $49.990
-            "todas_las_tablas": []
+            "tabla_menor_49990": [],
+            "tabla_mayor_49990": [],
+            "todas_las_tablas": [],
+            "tiene_datos": False
         }
         
         if not soup:
@@ -52,6 +55,7 @@ class ParisScraper(BaseScraper):
         # Extraer todas las tablas
         tables = self.extract_tables(soup)
         data["todas_las_tablas"] = [t["data"] for t in tables]
+        data["tiene_datos"] = len(tables) > 0
         
         # Identificar las tablas específicas
         if len(tables) >= 2:
@@ -70,12 +74,13 @@ class ParisScraper(BaseScraper):
         soup = self.fetch_page(url)
         
         data = {
-            "titulo": "Fulfillment by Paris",
+            "titulo": "Fulfillment by Paris (Almacenamiento y Retiro)",
             "url": url,
             "almacenamiento": [],
             "retiro": [],
             "todas_las_tablas": [],
-            "texto_relevante": []
+            "texto_relevante": [],
+            "tiene_datos": False
         }
         
         if not soup:
@@ -85,17 +90,18 @@ class ParisScraper(BaseScraper):
         # Extraer tablas
         tables = self.extract_tables(soup)
         data["todas_las_tablas"] = [t["data"] for t in tables]
+        data["tiene_datos"] = len(tables) > 0
         
         # Buscar secciones específicas por encabezados
-        for heading in soup.find_all(['h2', 'h3', 'h4', 'strong', 'b']):
+        for heading in soup.find_all(['h2', 'h3', 'h4', 'strong', 'b', 'p']):
             heading_text = heading.get_text(strip=True).lower()
             
-            if 'almacenamiento' in heading_text:
+            if 'almacenamiento' in heading_text and not data["almacenamiento"]:
                 next_table = heading.find_next('table')
                 if next_table:
                     data["almacenamiento"] = self._parse_table(next_table)
             
-            if 'retiro' in heading_text:
+            if 'retiro' in heading_text and not data["retiro"]:
                 next_table = heading.find_next('table')
                 if next_table:
                     data["retiro"] = self._parse_table(next_table)
@@ -103,9 +109,9 @@ class ParisScraper(BaseScraper):
         # Extraer texto con precios
         for p in soup.find_all(['p', 'li']):
             text = p.get_text(strip=True)
-            indicators = ['$', 'costo', 'tarifa', 'almacen', 'retiro', '%']
+            indicators = ['$', 'costo', 'tarifa', 'almacen', 'retiro', '%', 'clp']
             if any(ind in text.lower() for ind in indicators):
-                if len(text) > 15:
+                if len(text) > 15 and len(text) < 500:
                     data["texto_relevante"].append(text)
         
         logger.info(f"[Paris] Fulfillment: {len(tables)} tablas encontradas")
