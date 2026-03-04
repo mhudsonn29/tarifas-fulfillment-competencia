@@ -1,14 +1,9 @@
 name: Scrape Tarifas Fulfillment
 
 on:
-  # Cada 48 horas (cron: minuto hora dia mes dia-semana)
   schedule:
-    - cron: '0 8 */2 * *'  # A las 8:00 AM cada 2 días
-  
-  # Permitir ejecución manual
+    - cron: '0 8 */2 * *'
   workflow_dispatch:
-  
-  # También al hacer push a main
   push:
     branches: [main]
 
@@ -32,9 +27,6 @@ jobs:
       
       - name: Install dependencies
         run: pip install -r requirements.txt
-      
-      - name: Install Playwright browsers
-        run: playwright install chromium
       
       - name: Run scraper
         run: python scraper/main.py

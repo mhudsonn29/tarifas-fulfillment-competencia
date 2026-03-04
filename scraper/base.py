@@ -1,6 +1,6 @@
-"""Base scraper con Playwright para evitar bloqueos."""
+"""Base scraper con funcionalidad común."""
 
-from playwright.sync_api import sync_playwright
+import requests
 from bs4 import BeautifulSoup
 from typing import Any
 import logging
@@ -12,54 +12,35 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "es-CL,es;q=0.9,en;q=0.8",
+}
+
 
 class BaseScraper:
-    """Clase base para scrapers de marketplaces usando Playwright."""
+    """Clase base para scrapers de marketplaces."""
     
     def __init__(self, marketplace_name: str):
         self.marketplace_name = marketplace_name
-        self.browser = None
-        self.page = None
+        self.session = requests.Session()
+        self.session.headers.update(HEADERS)
     
-    def _init_browser(self):
-        """Inicializa el navegador Playwright."""
-        if not self.browser:
-            self.playwright = sync_playwright().start()
-            self.browser = self.playwright.chromium.launch(headless=True)
-            self.page = self.browser.new_page()
-            # Configurar user agent para parecer un navegador real
-            self.page.set_extra_http_headers({
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                'Accept-Language': 'es-CL,es;q=0.9,en;q=0.8',
-            })
-    
-    def _close_browser(self):
-        """Cierra el navegador."""
-        if self.browser:
-            self.browser.close()
-            self.playwright.stop()
-            self.browser = None
-            self.page = None
-    
-    def fetch_page(self, url: str, wait_time: int = 3) -> BeautifulSoup | None:
-        """Obtiene y parsea una pagina web usando Playwright."""
-        try:
-            self._init_browser()
-            
-            logger.info(f"[{self.marketplace_name}] Navegando a: {url}")
-            self.page.goto(url, wait_until='networkidle', timeout=30000)
-            
-            # Esperar un poco para que cargue el contenido dinámico
-            time.sleep(wait_time)
-            
-            # Obtener el HTML de la página
-            html = self.page.content()
-            
-            return BeautifulSoup(html, 'lxml')
-            
-        except Exception as e:
-            logger.error(f"[{self.marketplace_name}] Error al obtener {url}: {e}")
-            return None
+    def fetch_page(self, url: str, retries: int = 2) -> BeautifulSoup | None:
+        """Obtiene y parsea una pagina web."""
+        for attempt in range(retries):
+            try:
+                time.sleep(1)
+                logger.info(f"[{self.marketplace_name}] Obteniendo: {url}")
+                response = self.session.get(url, timeout=15)
+                response.raise_for_status()
+                return BeautifulSoup(response.content, 'lxml')
+            except Exception as e:
+                logger.warning(f"[{self.marketplace_name}] Intento {attempt + 1} falló: {e}")
+                if attempt < retries - 1:
+                    time.sleep(2)
+        return None
     
     def extract_tables(self, soup: BeautifulSoup) -> list[dict[str, Any]]:
         """Extrae todas las tablas de una página."""
@@ -69,10 +50,7 @@ class BaseScraper:
         for idx, table in enumerate(tables):
             table_data = self._parse_table(table)
             if table_data:
-                tables_data.append({
-                    'index': idx,
-                    'data': table_data
-                })
+                tables_data.append({'index': idx, 'data': table_data})
         
         return tables_data
     
@@ -80,18 +58,14 @@ class BaseScraper:
         """Parsea una tabla HTML a lista de listas."""
         rows = []
         for tr in table.find_all('tr'):
-            cells = []
-            for cell in tr.find_all(['th', 'td']):
-                text = cell.get_text(strip=True)
-                cells.append(text)
+            cells = [cell.get_text(strip=True) for cell in tr.find_all(['th', 'td'])]
             if cells:
                 rows.append(cells)
         return rows
     
-    def scrape(self) -> dict[str, Any]:
-        """Método principal de scraping. Debe ser implementado por subclases."""
-        raise NotImplementedError("Subclases deben implementar scrape()")
+    def _close_browser(self):
+        """Compatibilidad - no hace nada en requests."""
+        pass
     
-    def __del__(self):
-        """Limpieza al destruir el objeto."""
-        self._close_browser()
+    def scrape(self) -> dict[str, Any]:
+        raise NotImplementedError("Subclases deben implementar scrape()")
