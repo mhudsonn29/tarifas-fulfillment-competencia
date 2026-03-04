@@ -187,7 +187,6 @@ HTML_TEMPLATE = """
                 <p class="text-sm text-gray-500 mt-2">Incluye costos de almacenamiento y retiro de productos</p>
             </div>
         </section>
-        </section>
     </main>
 
     <footer class="bg-gray-800 text-white py-6">
