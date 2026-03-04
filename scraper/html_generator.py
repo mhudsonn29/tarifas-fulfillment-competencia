@@ -57,11 +57,14 @@ HTML_TEMPLATE = """
         <section class="mb-12 bg-white rounded-lg shadow-md p-6">
             <h2 class="text-2xl font-bold text-green-700 mb-4 flex items-center">
                 <span class="mr-2">🟢</span> Falabella
-                {% if not falabella.success %}<span class="ml-2 text-sm text-red-500">(Error al obtener datos)</span>{% endif %}
             </h2>
-            <p class="text-sm text-gray-500 mb-4">
-                <a href="{{ falabella.url }}" target="_blank" class="hover:underline">🔗 Ver fuente original</a>
-            </p>
+            <div class="mb-4">
+                <a href="{{ falabella.url }}" target="_blank" 
+                   class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                    🔗 Ver tarifas de Fulfillment en Falabella
+                </a>
+                <p class="text-sm text-gray-500 mt-2">Incluye tarifas de retiro, etiquetado, almacenamiento, cofinanciamiento y más</p>
+            </div>
             
             {% for key, tarifa in falabella.tarifas.items() %}
                 {% if tarifa.datos and tarifa.datos|length > 0 %}
@@ -113,55 +116,53 @@ HTML_TEMPLATE = """
                 <span class="mr-2">🟡</span> Mercado Libre
             </h2>
             
-            {% for key, tarifa in mercadolibre.tarifas.items() %}
-            <div class="mb-6 p-4 bg-gray-50 rounded">
-                <h3 class="text-lg font-semibold text-gray-700 mb-2">{{ tarifa.titulo }}</h3>
-                <p class="text-sm text-gray-500 mb-2">
-                    <a href="{{ tarifa.url }}" target="_blank" class="hover:underline">🔗 Ver fuente</a>
-                </p>
+            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <div class="p-4 bg-gray-50 rounded">
+                    <h3 class="font-semibold text-gray-700 mb-2">Costos por Colecta</h3>
+                    <a href="https://www.mercadolibre.cl/ayuda/33736" target="_blank" 
+                       class="inline-flex items-center px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition font-medium">
+                        🔗 Ver tarifas
+                    </a>
+                </div>
                 
-                {% if tarifa.error %}
-                <p class="text-red-500">❌ {{ tarifa.error }}</p>
-                {% else %}
-                    {% if tarifa.tablas %}
-                        {% for tabla in tarifa.tablas %}
-                        <div class="table-container mb-2">
-                            <table class="text-sm">
-                                {% for row in tabla %}
-                                <tr>
-                                    {% for cell in row %}
-                                    {% if loop.first and loop.parent.first %}
-                                    <th>{{ cell }}</th>
-                                    {% else %}
-                                    <td>{{ cell }}</td>
-                                    {% endif %}
-                                    {% endfor %}
-                                </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
-                        {% endfor %}
-                    {% endif %}
-                    
-                    {% if tarifa.texto_relevante %}
-                    <div class="mt-2">
-                        <p class="text-sm font-medium text-gray-600">Información relevante:</p>
-                        <ul class="list-disc list-inside text-sm text-gray-700">
-                            {% for texto in tarifa.texto_relevante[:10] %}
-                            <li>{{ texto }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
-                {% endif %}
+                <div class="p-4 bg-gray-50 rounded">
+                    <h3 class="font-semibold text-gray-700 mb-2">Cargos por Incumplimiento</h3>
+                    <a href="https://www.mercadolibre.cl/ayuda/19758" target="_blank" 
+                       class="inline-flex items-center px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition font-medium">
+                        🔗 Ver tarifas
+                    </a>
+                </div>
+                
+                <div class="p-4 bg-gray-50 rounded">
+                    <h3 class="font-semibold text-gray-700 mb-2">Almacenamiento Diario</h3>
+                    <a href="https://www.mercadolibre.cl/ayuda/24253" target="_blank" 
+                       class="inline-flex items-center px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition font-medium">
+                        🔗 Ver tarifas
+                    </a>
+                </div>
+                
+                <div class="p-4 bg-gray-50 rounded">
+                    <h3 class="font-semibold text-gray-700 mb-2">Stock Antiguo</h3>
+                    <a href="https://www.mercadolibre.cl/ayuda/15373" target="_blank" 
+                       class="inline-flex items-center px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition font-medium">
+                        🔗 Ver tarifas
+                    </a>
+                </div>
+                
+                <div class="p-4 bg-gray-50 rounded">
+                    <h3 class="font-semibold text-gray-700 mb-2">Retiro o Descarte</h3>
+                    <a href="https://www.mercadolibre.cl/ayuda/16645" target="_blank" 
+                       class="inline-flex items-center px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition font-medium">
+                        🔗 Ver tarifas
+                    </a>
+                </div>
             </div>
-            {% endfor %}
         </section>
 
         <!-- Paris -->
         <section class="mb-12 bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-2xl font-bold text-red-600 mb-4 flex items-center">
-                <span class="mr-2">🔴</span> Paris
+            <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
+                <span class="mr-2">🔵</span> Paris
             </h2>
             
             <!-- Costos Logísticos -->
@@ -169,7 +170,7 @@ HTML_TEMPLATE = """
                 <h3 class="text-lg font-semibold text-gray-700 mb-3">Costos de Despacho a Domicilio</h3>
                 <a href="https://ayuda.marketplace.paris.cl/2023/03/23/costos-logisticos/" 
                    target="_blank" 
-                   class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                   class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                     🔗 Ver tarifas de despacho en Paris
                 </a>
                 <p class="text-sm text-gray-500 mt-2">Incluye tablas de costos para despachos menores y mayores a $49.990</p>
@@ -180,7 +181,7 @@ HTML_TEMPLATE = """
                 <h3 class="text-lg font-semibold text-gray-700 mb-3">Fulfillment by Paris (Almacenamiento y Retiro)</h3>
                 <a href="https://ayuda.marketplace.paris.cl/2023/09/20/que-es-fulfillment/" 
                    target="_blank" 
-                   class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                   class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                     🔗 Ver tarifas de almacenamiento y retiro
                 </a>
                 <p class="text-sm text-gray-500 mt-2">Incluye costos de almacenamiento y retiro de productos</p>
