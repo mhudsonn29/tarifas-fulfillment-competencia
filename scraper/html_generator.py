@@ -164,176 +164,26 @@ HTML_TEMPLATE = """
                 <span class="mr-2">🔴</span> Paris
             </h2>
             
-            <!-- Despacho -->
-            {% set despacho = paris.tarifas.despacho %}
+            <!-- Costos Logísticos -->
             <div class="mb-6 p-4 bg-gray-50 rounded">
-                <h3 class="text-lg font-semibold text-gray-700 mb-2">{{ despacho.titulo }}</h3>
-                <p class="text-sm text-gray-500 mb-2">
-                    <a href="{{ despacho.url }}" target="_blank" class="text-blue-600 hover:underline">🔗 Ver fuente original</a>
-                </p>
-                
-                {% if despacho.error %}
-                <p class="text-red-500">❌ {{ despacho.error }}</p>
-                {% elif despacho.tiene_datos or despacho.todas_las_tablas %}
-                    {# Mostrar tablas específicas si las encontró #}
-                    {% if despacho.tabla_menor_49990 %}
-                    <div class="mb-4">
-                        <p class="font-medium text-gray-600 mb-1">📦 Despacho &lt; $49.990:</p>
-                        <div class="table-container">
-                            <table class="text-sm">
-                                {% for row in despacho.tabla_menor_49990 %}
-                                <tr>
-                                    {% for cell in row %}
-                                    {% if loop.parent.first %}
-                                    <th class="bg-red-50">{{ cell }}</th>
-                                    {% else %}
-                                    <td>{{ cell }}</td>
-                                    {% endif %}
-                                    {% endfor %}
-                                </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
-                    </div>
-                    {% endif %}
-                    
-                    {% if despacho.tabla_mayor_49990 %}
-                    <div class="mb-4">
-                        <p class="font-medium text-gray-600 mb-1">📦 Despacho &ge; $49.990:</p>
-                        <div class="table-container">
-                            <table class="text-sm">
-                                {% for row in despacho.tabla_mayor_49990 %}
-                                <tr>
-                                    {% for cell in row %}
-                                    {% if loop.parent.first %}
-                                    <th class="bg-red-50">{{ cell }}</th>
-                                    {% else %}
-                                    <td>{{ cell }}</td>
-                                    {% endif %}
-                                    {% endfor %}
-                                </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
-                    </div>
-                    {% endif %}
-                    
-                    {# Si no encontró las tablas específicas, mostrar todas #}
-                    {% if not despacho.tabla_menor_49990 and not despacho.tabla_mayor_49990 and despacho.todas_las_tablas %}
-                    <p class="text-sm text-gray-500 mb-2">Tablas encontradas:</p>
-                    {% for tabla in despacho.todas_las_tablas %}
-                    <div class="mb-4 table-container">
-                        <table class="text-sm">
-                            {% for row in tabla %}
-                            <tr>
-                                {% for cell in row %}
-                                {% if loop.parent.first %}
-                                <th class="bg-red-50">{{ cell }}</th>
-                                {% else %}
-                                <td>{{ cell }}</td>
-                                {% endif %}
-                                {% endfor %}
-                            </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-                {% else %}
-                <p class="text-gray-500">No se encontraron tablas en esta sección.</p>
-                {% endif %}
+                <h3 class="text-lg font-semibold text-gray-700 mb-3">Costos de Despacho a Domicilio</h3>
+                <a href="https://ayuda.marketplace.paris.cl/2023/03/23/costos-logisticos/" 
+                   target="_blank" 
+                   class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                    🔗 Ver tarifas de despacho en Paris
+                </a>
+                <p class="text-sm text-gray-500 mt-2">Incluye tablas de costos para despachos menores y mayores a $49.990</p>
             </div>
             
             <!-- Fulfillment -->
-            {% set fulfillment = paris.tarifas.fulfillment %}
             <div class="mb-6 p-4 bg-gray-50 rounded">
-                <h3 class="text-lg font-semibold text-gray-700 mb-2">{{ fulfillment.titulo }}</h3>
-                <p class="text-sm text-gray-500 mb-2">
-                    <a href="{{ fulfillment.url }}" target="_blank" class="text-blue-600 hover:underline">🔗 Ver fuente original</a>
-                </p>
-                
-                {% if fulfillment.error %}
-                <p class="text-red-500">❌ {{ fulfillment.error }}</p>
-                {% elif fulfillment.tiene_datos or fulfillment.todas_las_tablas %}
-                    {# Mostrar secciones específicas si las encontró #}
-                    {% if fulfillment.almacenamiento %}
-                    <div class="mb-4">
-                        <p class="font-medium text-gray-600 mb-1">📦 Almacenamiento:</p>
-                        <div class="table-container">
-                            <table class="text-sm">
-                                {% for row in fulfillment.almacenamiento %}
-                                <tr>
-                                    {% for cell in row %}
-                                    {% if loop.parent.first %}
-                                    <th class="bg-red-50">{{ cell }}</th>
-                                    {% else %}
-                                    <td>{{ cell }}</td>
-                                    {% endif %}
-                                    {% endfor %}
-                                </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
-                    </div>
-                    {% endif %}
-                    
-                    {% if fulfillment.retiro %}
-                    <div class="mb-4">
-                        <p class="font-medium text-gray-600 mb-1">📦 Retiro:</p>
-                        <div class="table-container">
-                            <table class="text-sm">
-                                {% for row in fulfillment.retiro %}
-                                <tr>
-                                    {% for cell in row %}
-                                    {% if loop.parent.first %}
-                                    <th class="bg-red-50">{{ cell }}</th>
-                                    {% else %}
-                                    <td>{{ cell }}</td>
-                                    {% endif %}
-                                    {% endfor %}
-                                </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
-                    </div>
-                    {% endif %}
-                    
-                    {# Si no encontró secciones específicas, mostrar todas las tablas #}
-                    {% if not fulfillment.almacenamiento and not fulfillment.retiro and fulfillment.todas_las_tablas %}
-                    <p class="text-sm text-gray-500 mb-2">Tablas encontradas:</p>
-                    {% for tabla in fulfillment.todas_las_tablas %}
-                    <div class="mb-4 table-container">
-                        <table class="text-sm">
-                            {% for row in tabla %}
-                            <tr>
-                                {% for cell in row %}
-                                {% if loop.parent.first %}
-                                <th class="bg-red-50">{{ cell }}</th>
-                                {% else %}
-                                <td>{{ cell }}</td>
-                                {% endif %}
-                                {% endfor %}
-                            </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-                    
-                    {# Texto relevante #}
-                    {% if fulfillment.texto_relevante %}
-                    <div class="mt-4 p-3 bg-yellow-50 rounded border border-yellow-200">
-                        <p class="text-sm font-medium text-gray-700 mb-2">📝 Información adicional:</p>
-                        <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
-                            {% for texto in fulfillment.texto_relevante[:10] %}
-                            <li>{{ texto }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
-                {% else %}
-                <p class="text-gray-500">No se encontraron tablas en esta sección.</p>
-                {% endif %}
+                <h3 class="text-lg font-semibold text-gray-700 mb-3">Fulfillment by Paris (Almacenamiento y Retiro)</h3>
+                <a href="https://ayuda.marketplace.paris.cl/2023/09/20/que-es-fulfillment/" 
+                   target="_blank" 
+                   class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                    🔗 Ver tarifas de almacenamiento y retiro
+                </a>
+                <p class="text-sm text-gray-500 mt-2">Incluye costos de almacenamiento y retiro de productos</p>
             </div>
         </section>
         </section>
