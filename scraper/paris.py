@@ -1,8 +1,11 @@
 """Scraper para Fulfillment by Paris (Cencosud)."""
 
+import logging
 from typing import Any
-from base import BaseScraper, logger
+from base import BaseScraper
 from config import URLS
+
+logger = logging.getLogger(__name__)
 
 
 class ParisScraper(BaseScraper):
@@ -20,16 +23,15 @@ class ParisScraper(BaseScraper):
             "tarifas": {}
         }
         
-        # Scrape costos logísticos (tablas de despacho)
+        # Scrape costos logísticos
         result["tarifas"]["despacho"] = self._scrape_costos_logisticos()
         
-        # Scrape fulfillment (almacenamiento y retiro)
+        # Scrape fulfillment
         result["tarifas"]["fulfillment"] = self._scrape_fulfillment()
         
-        # Paris es exitoso si al menos obtuvo algunas tablas
+        # Verificar si obtuvo datos
         despacho_ok = len(result["tarifas"]["despacho"].get("todas_las_tablas", [])) > 0
         fulfillment_ok = len(result["tarifas"]["fulfillment"].get("todas_las_tablas", [])) > 0
-        
         result["success"] = despacho_ok or fulfillment_ok
         
         return result
@@ -42,8 +44,6 @@ class ParisScraper(BaseScraper):
         data = {
             "titulo": "Costos de Despacho a Domicilio",
             "url": url,
-            "tabla_menor_49990": [],
-            "tabla_mayor_49990": [],
             "todas_las_tablas": [],
             "tiene_datos": False
         }
@@ -52,19 +52,11 @@ class ParisScraper(BaseScraper):
             data["error"] = "No se pudo obtener la página"
             return data
         
-        # Extraer todas las tablas
         tables = self.extract_tables(soup)
         data["todas_las_tablas"] = [t["data"] for t in tables]
         data["tiene_datos"] = len(tables) > 0
         
-        # Identificar las tablas específicas
-        if len(tables) >= 2:
-            data["tabla_menor_49990"] = tables[0]["data"] if tables else []
-            data["tabla_mayor_49990"] = tables[1]["data"] if len(tables) > 1 else []
-        elif len(tables) == 1:
-            data["tabla_menor_49990"] = tables[0]["data"]
-        
-        logger.info(f"[Paris] Costos Logísticos: {len(tables)} tablas encontradas")
+        logger.info(f"[Paris] Costos Logísticos: {len(tables)} tablas")
         
         return data
     
@@ -74,10 +66,8 @@ class ParisScraper(BaseScraper):
         soup = self.fetch_page(url)
         
         data = {
-            "titulo": "Fulfillment by Paris (Almacenamiento y Retiro)",
+            "titulo": "Fulfillment by Paris",
             "url": url,
-            "almacenamiento": [],
-            "retiro": [],
             "todas_las_tablas": [],
             "texto_relevante": [],
             "tiene_datos": False
@@ -87,34 +77,19 @@ class ParisScraper(BaseScraper):
             data["error"] = "No se pudo obtener la página"
             return data
         
-        # Extraer tablas
         tables = self.extract_tables(soup)
         data["todas_las_tablas"] = [t["data"] for t in tables]
         data["tiene_datos"] = len(tables) > 0
         
-        # Buscar secciones específicas por encabezados
-        for heading in soup.find_all(['h2', 'h3', 'h4', 'strong', 'b', 'p']):
-            heading_text = heading.get_text(strip=True).lower()
-            
-            if 'almacenamiento' in heading_text and not data["almacenamiento"]:
-                next_table = heading.find_next('table')
-                if next_table:
-                    data["almacenamiento"] = self._parse_table(next_table)
-            
-            if 'retiro' in heading_text and not data["retiro"]:
-                next_table = heading.find_next('table')
-                if next_table:
-                    data["retiro"] = self._parse_table(next_table)
-        
         # Extraer texto con precios
         for p in soup.find_all(['p', 'li']):
             text = p.get_text(strip=True)
-            indicators = ['$', 'costo', 'tarifa', 'almacen', 'retiro', '%', 'clp']
+            indicators = ['$', 'costo', 'tarifa', 'almacen', 'retiro', '%']
             if any(ind in text.lower() for ind in indicators):
-                if len(text) > 15 and len(text) < 500:
+                if 15 < len(text) < 300:
                     data["texto_relevante"].append(text)
         
-        logger.info(f"[Paris] Fulfillment: {len(tables)} tablas encontradas")
+        logger.info(f"[Paris] Fulfillment: {len(tables)} tablas")
         
         return data
 
@@ -122,4 +97,6 @@ class ParisScraper(BaseScraper):
 def scrape_paris() -> dict[str, Any]:
     """Función helper para ejecutar el scraper."""
     scraper = ParisScraper()
-    return scraper.scrape()
+    result = scraper.scrape()
+    scraper._close_browser()
+    return result

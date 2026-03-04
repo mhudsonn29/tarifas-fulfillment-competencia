@@ -1,8 +1,11 @@
 """Scraper para Mercado Libre Full."""
 
+import logging
 from typing import Any
-from base import BaseScraper, logger
+from base import BaseScraper
 from config import URLS
+
+logger = logging.getLogger(__name__)
 
 
 class MercadoLibreScraper(BaseScraper):
@@ -32,10 +35,6 @@ class MercadoLibreScraper(BaseScraper):
         for key, nombre, url in tarifas_config:
             result["tarifas"][key] = self._scrape_url(url, nombre)
         
-        # Verificar si alguno falló
-        if any(t.get("error") for t in result["tarifas"].values()):
-            result["success"] = False
-        
         return result
     
     def _scrape_url(self, url: str, nombre: str) -> dict[str, Any]:
@@ -57,27 +56,24 @@ class MercadoLibreScraper(BaseScraper):
         tables = self.extract_tables(soup)
         data["tablas"] = [t["data"] for t in tables]
         
-        # Extraer contenido de la página de ayuda
-        # Mercado Libre usa divs específicos para el contenido
+        # Extraer contenido relevante
         article = (
             soup.find('article') or 
             soup.find('div', class_='content') or 
             soup.find('main') or
-            soup.find('div', {'id': 'content'})
+            soup.find('body')
         )
         
         if article:
-            # Buscar párrafos con información de precios
             paragraphs = article.find_all(['p', 'li'])
             for p in paragraphs:
                 text = p.get_text(strip=True)
-                # Filtrar texto que contenga precios o tarifas
                 indicators = ['$', 'clp', 'costo', 'tarifa', 'cargo', 'precio', '%']
                 if any(ind in text.lower() for ind in indicators):
-                    if len(text) > 10:  # Evitar textos muy cortos
+                    if 10 < len(text) < 300:
                         data["texto_relevante"].append(text)
         
-        logger.info(f"[MercadoLibre] {nombre}: {len(data['tablas'])} tablas, {len(data['texto_relevante'])} textos")
+        logger.info(f"[MercadoLibre] {nombre}: {len(data['tablas'])} tablas")
         
         return data
 
@@ -85,4 +81,6 @@ class MercadoLibreScraper(BaseScraper):
 def scrape_mercadolibre() -> dict[str, Any]:
     """Función helper para ejecutar el scraper."""
     scraper = MercadoLibreScraper()
-    return scraper.scrape()
+    result = scraper.scrape()
+    scraper._close_browser()
+    return result
