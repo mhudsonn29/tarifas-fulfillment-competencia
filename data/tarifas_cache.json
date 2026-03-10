@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-03-10T13:04:24.393551",
+  "last_run": "2026-03-10T13:08:42.418845",
   "platforms": {
     "wfs": {
       "tarifas": [
@@ -52,31 +52,31 @@
           "costo": 18990
         }
       ],
-      "last_success": "2026-03-10T13:04:22.455103",
-      "last_attempt": "2026-03-10T13:04:22.455103",
+      "last_success": "2026-03-10T13:08:29.945145",
+      "last_attempt": "2026-03-10T13:08:29.945145",
       "success": true,
       "error": null
     },
     "falabella": {
       "tarifas": [],
       "last_success": null,
-      "last_attempt": "2026-03-10T13:04:23.094614",
+      "last_attempt": "2026-03-10T13:08:35.319422",
       "success": false,
-      "error": "BrowserType.launch: Executable doesn't exist at C:\\Users\\vn5ab8q\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1208\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     playwright install                                     ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+      "error": "No se pudieron parsear las tarifas de las tablas"
     },
     "paris": {
       "tarifas": [],
       "last_success": null,
-      "last_attempt": "2026-03-10T13:04:23.684308",
+      "last_attempt": "2026-03-10T13:08:39.222878",
       "success": false,
       "error": "No se encontraron tablas en ninguna página de Paris"
     },
     "mercadolibre": {
       "tarifas": [],
       "last_success": null,
-      "last_attempt": "2026-03-10T13:04:24.393551",
+      "last_attempt": "2026-03-10T13:08:42.418845",
       "success": false,
-      "error": "BrowserType.launch: Executable doesn't exist at C:\\Users\\vn5ab8q\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1208\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     playwright install                                     ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+      "error": "No se encontraron tablas en la página"
     }
   }
 }
