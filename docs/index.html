@@ -1,24 +1,4 @@
-"""Generador de página HTML con las tarifas."""
-
-import os
-from datetime import datetime
-from typing import Any
-
-
-def generate_html(
-    falabella_data: dict[str, Any] = None,
-    mercadolibre_data: dict[str, Any] = None,
-    paris_data: dict[str, Any] = None,
-    output_dir: str = "docs"
-) -> str:
-    """Genera el archivo HTML con las tarifas."""
-    
-    # Crear directorio de salida
-    os.makedirs(output_dir, exist_ok=True)
-    
-    updated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
-    html_content = f'''<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -26,16 +6,16 @@ def generate_html(
     <title>Tarifas Fulfillment - Competencia Chile</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .btn-green {{ @apply inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium; }}
-        .btn-yellow {{ @apply inline-flex items-center px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition font-medium; }}
-        .btn-blue {{ @apply inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium; }}
+        .btn-green { @apply inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium; }
+        .btn-yellow { @apply inline-flex items-center px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition font-medium; }
+        .btn-blue { @apply inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium; }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
     <header class="bg-blue-700 text-white py-6 shadow-lg">
         <div class="container mx-auto px-4">
             <h1 class="text-3xl font-bold">📦 Tarifas Fulfillment - Competencia</h1>
-            <p class="mt-2 text-blue-100">Actualizado: {updated_at}</p>
+            <p class="mt-2 text-blue-100">Actualizado: 2026-03-10 09:15:40</p>
         </div>
     </header>
 
@@ -248,11 +228,3 @@ def generate_html(
     </footer>
 </body>
 </html>
-'''
-    
-    # Guardar archivo
-    output_path = os.path.join(output_dir, "index.html")
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write(html_content)
-    
-    return output_path
