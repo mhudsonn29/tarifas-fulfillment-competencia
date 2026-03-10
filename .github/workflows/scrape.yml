@@ -2,38 +2,53 @@ name: Scrape Tarifas Fulfillment
 
 on:
   schedule:
-    - cron: '0 8 */2 * *'
-  workflow_dispatch:
+    - cron: '0 9 * * *'  # Cada dia a las 9am UTC (6am Chile)
+  workflow_dispatch:      # Permite correrlo manualmente cuando quieras
   push:
     branches: [main]
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    
+
     permissions:
       contents: write
-      pages: write
-      id-token: write
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
+
       - name: Install dependencies
-        run: pip install -r requirements.txt
-      
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Restore cache de tarifas anteriores
+        uses: actions/cache@v4
+        with:
+          path: data/tarifas_cache.json
+          key: tarifas-cache-${{ runner.os }}
+          restore-keys: tarifas-cache-
+
       - name: Run scraper
         run: python scraper/main.py
-      
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+
+      - name: Guardar cache actualizado
+        uses: actions/cache@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
-          publish_branch: gh-pages
+          path: data/tarifas_cache.json
+          key: tarifas-cache-${{ runner.os }}-${{ github.run_id }}
+
+      - name: Commit docs generados
+        run: |
+          git config --global user.name  'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add docs/ data/
+          git diff --staged --quiet || git commit -m "chore: actualizar tarifas $(date +'%Y-%m-%d %H:%M')  [skip ci]"
+          git push

@@ -1,0 +1,82 @@
+{
+  "last_run": "2026-03-10T13:04:24.393551",
+  "platforms": {
+    "wfs": {
+      "tarifas": [
+        {
+          "talla": "XS",
+          "peso_min": 0,
+          "peso_max": 2,
+          "costo": 2000
+        },
+        {
+          "talla": "S1",
+          "peso_min": 2,
+          "peso_max": 4,
+          "costo": 2500
+        },
+        {
+          "talla": "S2",
+          "peso_min": 4,
+          "peso_max": 6,
+          "costo": 3990
+        },
+        {
+          "talla": "S3",
+          "peso_min": 6,
+          "peso_max": 15,
+          "costo": 4250
+        },
+        {
+          "talla": "M1",
+          "peso_min": 15,
+          "peso_max": 25,
+          "costo": 5590
+        },
+        {
+          "talla": "M2",
+          "peso_min": 25,
+          "peso_max": 50,
+          "costo": 6290
+        },
+        {
+          "talla": "L",
+          "peso_min": 50,
+          "peso_max": 400,
+          "costo": 6990
+        },
+        {
+          "talla": "XL",
+          "peso_min": 400,
+          "peso_max": 9999,
+          "costo": 18990
+        }
+      ],
+      "last_success": "2026-03-10T13:04:22.455103",
+      "last_attempt": "2026-03-10T13:04:22.455103",
+      "success": true,
+      "error": null
+    },
+    "falabella": {
+      "tarifas": [],
+      "last_success": null,
+      "last_attempt": "2026-03-10T13:04:23.094614",
+      "success": false,
+      "error": "BrowserType.launch: Executable doesn't exist at C:\\Users\\vn5ab8q\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1208\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     playwright install                                     ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+    },
+    "paris": {
+      "tarifas": [],
+      "last_success": null,
+      "last_attempt": "2026-03-10T13:04:23.684308",
+      "success": false,
+      "error": "No se encontraron tablas en ninguna página de Paris"
+    },
+    "mercadolibre": {
+      "tarifas": [],
+      "last_success": null,
+      "last_attempt": "2026-03-10T13:04:24.393551",
+      "success": false,
+      "error": "BrowserType.launch: Executable doesn't exist at C:\\Users\\vn5ab8q\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1208\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     playwright install                                     ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+    }
+  }
+}
