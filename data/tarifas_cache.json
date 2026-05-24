@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-05-23T10:20:12.334046",
+  "last_run": "2026-05-24T10:25:45.526494",
   "platforms": {
     "wfs": {
       "tarifas": [
@@ -52,29 +52,29 @@
           "costo": 18990
         }
       ],
-      "last_success": "2026-05-23T10:19:59.229987",
-      "last_attempt": "2026-05-23T10:19:59.229987",
+      "last_success": "2026-05-24T10:25:30.905252",
+      "last_attempt": "2026-05-24T10:25:30.905252",
       "success": true,
       "error": null
     },
     "falabella": {
       "tarifas": [],
       "last_success": null,
-      "last_attempt": "2026-05-23T10:20:05.410064",
+      "last_attempt": "2026-05-24T10:25:38.698516",
       "success": false,
       "error": "No se pudieron parsear las tarifas de las tablas"
     },
     "paris": {
       "tarifas": [],
       "last_success": null,
-      "last_attempt": "2026-05-23T10:20:09.146006",
+      "last_attempt": "2026-05-24T10:25:42.424475",
       "success": false,
       "error": "No se encontraron tablas en ninguna página de Paris"
     },
     "mercadolibre": {
       "tarifas": [],
       "last_success": null,
-      "last_attempt": "2026-05-23T10:20:12.334046",
+      "last_attempt": "2026-05-24T10:25:45.526494",
       "success": false,
       "error": "No se encontraron tablas en la página"
     }
