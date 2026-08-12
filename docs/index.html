@@ -13,7 +13,7 @@
         <div class="container mx-auto px-4">
             <h1 class="text-3xl font-bold">📦 Comparador Tarifas Fulfillment</h1>
             <p class="mt-1 text-blue-200 text-sm">Walmart WFS · Falabella · Paris · Mercado Libre</p>
-            <p class="mt-1 text-blue-300 text-xs">Ultima actualizacion: 11/08/2026 09:46</p>
+            <p class="mt-1 text-blue-300 text-xs">Ultima actualizacion: 12/08/2026 09:52</p>
         </div>
     </header>
 
@@ -58,7 +58,7 @@
                     <h3 class="text-lg font-bold" style="color:#0053e2">🔷 Walmart WFS</h3>
                     <span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">✅ Actualizado</span>
                 </div>
-                <p class="text-xs text-gray-400 mb-4">Ultima actualizacion: 11/08/2026 09:46</p>
+                <p class="text-xs text-gray-400 mb-4">Ultima actualizacion: 12/08/2026 09:52</p>
                 <a href="https://marketplacelearn.walmart.com/cl/guides/Walmart%20Fulfillment%20Services/Walmart%20Fulfillment%20Services/tarifas-wfs" target="_blank"
                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-white text-sm font-medium transition hover:opacity-90"
                    style="background-color:#0053e2">
@@ -117,7 +117,7 @@
     </footer>
 
     <script>
-        const TARIFAS_DATA = {"wfs": {"nombre": "Walmart WFS", "color": "#0053e2", "tarifas": [{"costo": 2, "talla": "xs", "peso_min": 0.0, "peso_max": 2.0}, {"costo": 4, "talla": "S1", "peso_min": 1.0, "peso_max": 2.0}, {"costo": 6, "talla": "S2", "peso_min": 2.0, "peso_max": 4.0}, {"costo": 15, "talla": "S3", "peso_min": 3.0, "peso_max": 6.0}, {"costo": 25, "talla": "M1", "peso_min": 1.0, "peso_max": 15.0}, {"costo": 50, "talla": "M2", "peso_min": 2.0, "peso_max": 25.0}, {"costo": 400, "talla": "L", "peso_min": 50.0, "peso_max": 6.99}], "disponible": true}, "falabella": {"nombre": "Falabella", "color": "#009e60", "tarifas": [], "disponible": false}, "paris": {"nombre": "Paris", "color": "#2563eb", "tarifas": [], "disponible": false}, "mercadolibre": {"nombre": "Mercado Libre", "color": "#d97706", "tarifas": [], "disponible": false}};
+        const TARIFAS_DATA = {"wfs": {"nombre": "Walmart WFS", "color": "#0053e2", "tarifas": [{"talla": "XS", "peso_min": 0, "peso_max": 2, "costo": 2000}, {"talla": "S1", "peso_min": 2, "peso_max": 4, "costo": 2500}, {"talla": "S2", "peso_min": 4, "peso_max": 6, "costo": 3990}, {"talla": "S3", "peso_min": 6, "peso_max": 15, "costo": 4250}, {"talla": "M1", "peso_min": 15, "peso_max": 25, "costo": 5590}, {"talla": "M2", "peso_min": 25, "peso_max": 50, "costo": 6290}, {"talla": "L", "peso_min": 50, "peso_max": 400, "costo": 6990}, {"talla": "XL", "peso_min": 400, "peso_max": 9999, "costo": 18990}], "disponible": true}, "falabella": {"nombre": "Falabella", "color": "#009e60", "tarifas": [], "disponible": false}, "paris": {"nombre": "Paris", "color": "#2563eb", "tarifas": [], "disponible": false}, "mercadolibre": {"nombre": "Mercado Libre", "color": "#d97706", "tarifas": [], "disponible": false}};
         
     function getCosto(tarifas, peso) {
         if (!tarifas || tarifas.length === 0) return null;
